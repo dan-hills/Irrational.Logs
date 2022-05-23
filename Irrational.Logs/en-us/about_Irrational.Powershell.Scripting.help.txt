@@ -1,0 +1,16 @@
+TOPIC
+    about_Irrational.Logs
+
+SHORT DESCRIPTION
+    This module is intended to collect functions which can be used for creating logs and sending notifications
+
+LONG DESCRIPTION
+
+GETTING STARTED
+
+EXAMPLES
+
+NOTES
+
+SEE ALSO
+
