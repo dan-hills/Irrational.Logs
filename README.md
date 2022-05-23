@@ -18,30 +18,13 @@ Current functions include the following capabilities:
 Detailed below are highlights for each of the included functions
 ## Usage
 
-### Send-MailNotification
-
-```powershell
-$mail = @{
-    To           = $recipient
-    From         = 'mailbox@irrationalshibas.com'
-    Intro        = $intro
-    Subject      = "Systems Update{0} - {1}" -f $reportType,$date.toString('MM/dd/yy')
-    EnhancedBody = $body
-    ConfigurationFile = ( Join-Path $psscriptRoot 'reporting.css' )
-}
-Send-MailNotification @mail
-```
-
-This example will produce the following email output once sent:
-![Send-MailNotification](./docs/send-mailnotification_complex.png)
-
 ### Set-Log/Write-Log
 
 This set of functions has been designed with the intention of building a robust, standardized logging tool which outputs using a clean, consistent format to both the console window as well as outputting a structured object to a file.
 
 #### Overview of Write-Log
 
-This function can be used to create a standardized system of logging for your scripts and outputs the results as a CSV file, json file, or `.log` file (supported by the SCCM CMTrace logging).
+This function can be used to create a standardized system of logging for your scripts and outputs the results as a CSV file, text file, or `.log` file (supported by the SCCM CMTrace logging).
 
 The saved CSV can then be used for easier querying when re-imported to Powershell.
 
