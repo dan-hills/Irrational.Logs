@@ -30,7 +30,14 @@ function SetOutputPath {
 
         forEach( $col in $collection ){
 
-            $projectName + '_' + $col + '.' + $outputType 
+            if( $col -eq 'default' ){
+                
+                $projectName + '.' + $outputType
+            }
+            else{
+
+                $projectName + '_' + $col + '.' + $outputType 
+            }
         }
     }
     else{
