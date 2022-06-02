@@ -72,7 +72,7 @@ function Set-Log {
         [Switch] $Force = $false,
 
         [Parameter()]
-        [Switch] $RemoveAllDefaults = $false,
+        [Switch] $ResetAllDefaults = $false,
 
         [Parameter()]
         [ValidateSet('global','script')]
@@ -90,34 +90,44 @@ function Set-Log {
         [Switch] $EnableLogRotation = $false,
 
         [Parameter( ParameterSetName = 'LogRotation' )]
-        [Int] $LogSizeMB,
+        [ValidateRange(1,5000)]
+        [Int] $LogSizeMB = 200,
 
         [Parameter( ParameterSetName = 'LogRotation' )]
-        [Int] $RotationLogCount,
+        [ValidateRange(1,20)]
+        [Int] $RotationLogCount = 5,
 
         [Parameter()]
         [Switch] $PassThru = $false
     )
 
-    $staticParam = 'Force','RemoveAllDefaults','passThru','verbose','debug','erroraction','warningaction','informationAction','errorVariable','warningVariable','informationVariable','outVariable','outBuffer','pipelineVariable'
+    $staticParam = 'Force','ResetAllDefaults','passThru','verbose','debug','erroraction','warningaction','informationAction','errorVariable','warningVariable','informationVariable','outVariable','outBuffer','pipelineVariable'
 
     $variables = forEach( $item in $myInvocation.myCommand.Parameters.keys.where{$_ -notIn $staticParam} ){ 
 
         try{ Get-Variable -Name $item -ErrorAction 'stop' }catch{ Write-Warning "Error retrieving settings for '$item'"; continue }
     }
 
-    # This will go through and remove any of the previously assigned settings
-    foreach( $var in $variables ){
+    Write-Debug ( $variables | ConvertTo-Json )
 
-        $varName = "Write-RSGLog:" + $var.name
+    # This will go through and remove any of the previously assigned settings
+    foreach( $var in $variables.where{ $_.value -ne 0 } ){
+
+        $varName = "Write-IrrationalLog:" + $var.name
 
         # Debug current variable details
         Write-Debug $varName
-        if( ![String]::IsNullOrEmpty($global:PSDefaultParameterValues.$varName) ){ Write-Debug ("Current Settings:" + $global:PSDefaultParameterValues.$varName) }else{ Write-Debug 'Current Settings: null' }
-        Write-Debug "New Settings: $( $var | ConvertTo-Json )"
+        if( ![String]::IsNullOrEmpty($global:PSDefaultParameterValues.$varName) ){
+            Write-Debug ("Current Settings:" + $global:PSDefaultParameterValues.$varName) 
+        }
+        else{ 
+            Write-Debug 'Current Settings: null' 
+        }
         
-        # Removes all saved settings
-        if( $PSBoundParameters['RemoveAllDefaults'] ){
+        Write-Debug "New Settings: $( $var | ConvertTo-Json -WarningAction 'silentlyContinue' )"
+        
+        # Resets all saved settings
+        if( $PSBoundParameters['ResetsAllDefaults'] ){
 
             Write-Verbose "Removing $varName"
             $global:psdefaultparametervalues.remove("$varName")
@@ -158,10 +168,10 @@ function Set-Log {
 
     $outputpath = Switch ($psCmdlet.ParameterSetname ){
 
-        'LogRotation'      { Join-Path $path "$($global:PSDefaultParameterValues['Write-Log:projectName'])\$($global:PSDefaultParameterValues['Write-Log:projectName']).$($global:PSDefaultParameterValues['Write-Log:outputtype'])" }
+        'LogRotation'      { Join-Path $path "$($global:PSDefaultParameterValues['Write-IrrationalLog:projectName'])\$($global:PSDefaultParameterValues['Write-IrrationalLog:projectName']).$($global:PSDefaultParameterValues['Write-IrrationalLog:outputtype'])" }
         'datedlog'         { 
             $date = Get-Date -f 'yyyyMMdd' 
-            Join-Path $path "$($global:PSDefaultParameterValues['Write-Log:projectName'])\${date}_$($global:PSDefaultParameterValues['Write-Log:projectName']).$($global:PSDefaultParameterValues['Write-Log:outputtype'])" }
+            Join-Path $path "$($global:PSDefaultParameterValues['Write-IrrationalLog:projectName'])\${date}_$($global:PSDefaultParameterValues['Write-IrrationalLog:projectName']).$($global:PSDefaultParameterValues['Write-IrrationalLog:outputtype'])" }
     }
     
     if( $psBoundParameters['PassThru'] ){
@@ -169,9 +179,9 @@ function Set-Log {
         [pscustomobject][ordered]@{
             ProjectName = $projectName
             Path        = $outputPath
-            Parent      = Join-Path $path $global:PSDefaultParameterValues['Write-LoG:projectName']
+            Parent      = Join-Path $path $global:PSDefaultParameterValues['Write-IrrationalLog:projectName']
             LogType     = $pscmdlet.ParameterSetName
-            Defaults    = $global:PSDefaultParameterValues.getEnumerator().where{$_.name -like "Write-Log:*"} | ConvertTo-Json
+            Defaults    = $global:PSDefaultParameterValues.getEnumerator().where{$_.name -like "Write-IrrationalLog:*"} | ConvertTo-Json -WarningAction 'silentlyContinue'
         }
     }
 }
