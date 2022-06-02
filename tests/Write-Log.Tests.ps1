@@ -7,12 +7,21 @@
 
 Describe "Log output file settings" {
 
-    Context "File Formatting" {
+    Context "File Formatting" -forEach @('log','csv'){
 
-        It "Logs are output as <_>" -forEach @('log','csv') {
+        BeforeAll {
+            
+            $log = Write-IrrationalLog 'Test' -PassThru -OutputType $_
+        }
 
-            Write-IrrationalLog 'Test' 
+        It "Log of type '<_>' is successfully created" {
 
+            $log.path | Should -Exist
+        }
+
+        It "Logs can be read back into powershell" {
+
+            $log.
         }
     }
 }
