@@ -1,0 +1,155 @@
+// https://code.visualstudio.com/docs/editor/userdefinedsnippets
+{
+	"Class": {
+        "prefix": "ps-class",
+        "description": "Builds a new powershell class",
+        "scope": "powershell",
+        "body": [
+            "class ${Name} {",
+            "\t$0",
+            "}"
+        ],
+    },
+
+	"Comment-Based Help": {
+		"prefix": "ps-help",
+        "description": "A new general help statement for a basic ps function",
+		"scope": "powershell",
+        "body": [
+			"<#",
+			".SYNOPSIS",
+			"\t${1:Short description}\n",
+			".DESCRIPTION",
+			"\t${2:Long description}\n",
+			".NOTES",
+			"\t${0:General Notes}\n",
+            "#>"
+		],
+    },
+
+    "Script Help": {
+        "prefix": "ps-script-help",
+        "description": "Add standardized help for a PS script",
+        "scope": "powershell",
+        "body": [
+            "<#",
+            ".SYNOPSIS",
+            "\t${1:Short description}\n",
+            ".DESCRIPTION",
+            "\t${2:Long description}\n",
+            ".PARAMETER ${3:ParameterName}",
+            "\t${4:Description of parameter input}\n",
+            ".EXAMPLE",
+            "\tPS>\n",
+            "\tExample of how to use this cmdlet\n",
+            ".EXAMPLE",
+            "\tPS>\n",
+            "\tAnother example of how to use this cmdlet\n",
+			".LINK",
+			"\tAny related function or website\n",
+			".NOTES",
+            "\t${5:General notes}",
+			"#>\n\n",
+			"<#PSScriptInfo",
+            ".VERSION 1.0.0\n",
+            ".AUTHOR ${6:USERNAME}\n",
+			".GUID be7e5b3f-${CURRENT_YEAR}-${CURRENT_MONTH}${CURRENT_DATE}-${CURRENT_HOUR}${CURRENT_MINUTE}-${CURRENT_SECOND}afcca5c65a\n",
+            ".TAGS ${7:tags}\n",
+            ".ICONURI\n",
+            ".EXTERNALMODULEDEPENDENCIES\n",
+            ".RELEASENOTES",
+            "\t1.0.0 - Initial Release",
+            "#>\n",
+            "[cmdletbinding()]\n",
+            "param(",
+            "\t[Parameter()]",
+            "\t[${8|PSObject,String,Int|}] $${3:ParameterName}",
+            ")",
+            "$0"
+        ],
+	},
+
+    "Basic function": {
+        "prefix": "ps-basic-function",
+        "description": "Full config for a new advanced function",
+        "scope": "powershell",
+        "body": [
+            "function ${TM_FILENAME_BASE}($${3:ParameterName}){\n",
+            "\t<#",
+            "\t.SYNOPSIS",
+            "\t\t${1:Short description}\n",
+            "\t.DESCRIPTION",
+            "\t\t${2:Long description}\n",
+			"\t.NOTES",
+            "\t\t${3:General notes}",
+            "\t#>\n",
+            "\t$0",
+            "}"
+        ]
+    },
+
+    "Advanced Function": {
+        "prefix": "ps-adv-function",
+        "description": "Full config for a new advanced function",
+        "scope": "powershell",
+        "body": [
+            "function ${TM_FILENAME_BASE}{\n",
+            "\t<#",
+            "\t.SYNOPSIS",
+            "\t\t${1:Short description}\n",
+            "\t.DESCRIPTION",
+            "\t\t${2:Long description}\n",
+            "\t.PARAMETER ${3:ParameterName}",
+            "\t\t${4:Description of parameter input}\n",
+            "\t.EXAMPLE",
+            "\t\tPS>\n",
+            "\t\tExample of how to use this cmdlet\n",
+            "\t.EXAMPLE",
+            "\t\tPS>\n",
+            "\t\tAnother example of how to use this cmdlet\n",
+            "\t.INPUTS",
+            "\t\tInputs to this cmdlet (if any)\n",
+            "\t.OUTPUTS",
+            "\t\tOutput from this cmdlet (if any)\n",
+			"\t.LINK",
+			"\t\tAny related function or website\n",
+			"\t.NOTES",
+            "\t\t${5:General notes}",
+            "\t#>\n",
+            "\t[cmdletbinding()]\n",
+            "\tparam(",
+            "\t\t[Parameter()]",
+            "\t\t[${6|PSObject,String,Int|}] $${3:ParameterName}",
+            "\t)\n",
+            "\tBEGIN{}\n",
+            "\tPROCESS{\n",
+            "\t\t$0",
+            "\t}\n",
+            "\tEND{}",
+            "}"
+        ]
+    },
+
+    "Pester Tests": {
+        "prefix": "ps-pester",
+        "description": "General setup of a new Pester file",
+        "scope": "powershell",
+        "body": [
+            "<#",
+            ".SYNOPSIS",
+            "\tPester tests generated for function ${TM_FILENAME_BASE}\n",
+            ".DESCRIPTION",
+            "\t${1:Pester Test Description}\n",
+            "#>\n",
+            "BeforeAll {\n",
+            "}\n",
+            "Describe ${2:DescribeBlock} {\n",
+            "\tContext ${3:ContextBlock} {\n",
+            "\t\tIt ${4:TestContents} {\n",
+            "\t\t\t$0",
+            "\t\t}",
+            "\t}",
+            "}"
+        ]
+    }
+}
